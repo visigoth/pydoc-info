@@ -1,0 +1,25 @@
+pydoc-info
+==========
+
+pydoc-info is an Emacs package for searching and browsing Python
+documentation in the Info browser.
+
+It enables you to quickly find the relevant documentation using the
+standard command `info-lookup-symbol'.
+
+
+Setup and install
+-----------------
+
+Before using this package, you may need to download and install the
+Python documentation in the Info format.
+
+    wget <...>
+    sudo cp python.info /usr/share/info
+    sudo install-info --info-dir=/usr/share/info python.info
+
+
+Then add the following to your ~/.emacs.d/init.el.
+
+    (add-to-list 'load-path "~/path/to/pydoc-info")
+    (require 'pydoc-info)
