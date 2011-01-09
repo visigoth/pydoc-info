@@ -14,7 +14,8 @@ Setup and install
 Before using this package, you may need to download and install the
 Python documentation in the Info format.
 
-    wget <...>
+    wget https://bitbucket.org/jonwaltman/pydoc-info/downloads/python.info.gz
+    gunzip python.info
     sudo cp python.info /usr/share/info
     sudo install-info --info-dir=/usr/share/info python.info
 

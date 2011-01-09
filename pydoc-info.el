@@ -29,7 +29,9 @@
 ;;; Install:
 ;; To use this package, you will need to have a recent version of the
 ;; Python documentation in the Info format on your machine.  It can be
-;; downloaded at < ... >.
+;; downloaded at:
+;;
+;; https://bitbucket.org/jonwaltman/pydoc-info/downloads/python.info.gz
 ;;
 ;; Then add this file to your load-path and put the following
 ;; expression into your ~/.emacs.d/init.el.
