@@ -1,18 +1,30 @@
+..                             -*-rst-*-
+
 pydoc-info
 ==========
 
-pydoc-info is an Emacs package for searching and browsing Python
-documentation in the Info browser.
-
-It enables you to quickly find the relevant documentation using the
-standard command `info-lookup-symbol'.
+pydoc-info is an Emacs package for searching and browsing the new
+Python documentation in the Info browser.
 
 
-Setup and install
+Features
+--------
+
+Improved Info-lookup support:
+  Allows you to quickly find the relevant documentation using the
+  standard command ``info-lookup-symbol`` (``C-h S``).
+
+Hide superfluous ``*note: references``:
+  Prevent Info from displaying ``*note:`` or ``see`` in front of
+  cross-references when browsing the Python documentation.  This
+  does not affect other Info documents.
+
+
+Setup and Install
 -----------------
 
 Before using this package, you may need to download and install the
-Python documentation in the Info format.
+necessary Info files::
 
     wget https://bitbucket.org/jonwaltman/pydoc-info/downloads/python.info.gz
     gunzip python.info
@@ -20,7 +32,78 @@ Python documentation in the Info format.
     sudo install-info --info-dir=/usr/share/info python.info
 
 
-Then add the following to your ~/.emacs.d/init.el.
+Then add the following to your ~/.emacs.d/init.el::
 
     (add-to-list 'load-path "~/path/to/pydoc-info")
     (require 'pydoc-info)
+
+
+Python Info Documents
+---------------------
+
+This package is designed to work with Info files produced from the
+"new" Python documentation.  The "new" documentation is used to
+distinguish the current documents written in RestructedText and built
+using Sphinx to the older versions written in Latex (circa python 2.4).
+
+Support for generating the necessary Info files is currently limited
+to the development branch of Sphinx.  Thus they are not yet available
+at the Python download site nor can they built from source without
+some initial set up.
+
+
+Building the Python Documentation
+---------------------------------
+
+If you want to build the Python documentation yourself, follow these steps:
+
+#. Download and install the latest version of Sphinx (virtualenv may be useful)::
+
+      hg clone https://bitbucket.org/birkenfeld/sphinx
+      cd sphinx
+      sudo python setup.py install
+
+#. Install some libraries::
+
+      pip install docutils jinja2 pygments
+
+#. Download the Python source::
+
+      wget http://www.python.org/ftp/python/2.7.1/Python-2.7.1.tar.bz2
+      tar xf Python-2.7.1.tar.bz2
+
+#. Modify the configuration file ``conf.py``::
+
+      cd Python-2.7.1/Doc
+      cat >> conf.py <<'EOF'
+
+      texinfo_documents = [
+          ('contents', 'python', 'Python Documentation', _stdauthor,
+           "Python", "The Python Documentation", "Software Development"),
+      ]
+      EOF
+
+#. Generate the Texinfo::
+
+      mkdir -p build/texinfo build/doctrees
+      sphinx-build -b texinfo -d build/doctrees . build/texinfo
+
+#. Build the Info files::
+
+      cd build/texinfo
+      makeinfo --no-split python.texi
+
+#. Install the Info file (optional)::
+
+      sudo cp python.info /usr/share/info
+      sudo install-info --info-dir=/usr/share/info python.info
+
+
+Links
+-----
+
+https://bitbucket.org/birkenfeld/sphinx/
+  Main Sphinx devolopment repository
+
+https://bitbucket.org/jonwaltman/sphinx-info/
+  Fork of the main Sphinx repository for development on the Texinfo builder
