@@ -1,7 +1,8 @@
-..                             -*-rst-*-
+..              -*- restructuredtext -*-
 
-pydoc-info
-==========
+=======================
+ README for pydoc-info
+=======================
 
 pydoc-info is an Emacs package for searching and browsing the new
 Python documentation in the Info browser.
@@ -102,8 +103,23 @@ If you want to build the Python documentation yourself, follow these steps:
 Links
 -----
 
+https://bitbucket.org/jonwaltman/pydoc-info
+  pydoc-info Mercurial repository
+
 https://bitbucket.org/birkenfeld/sphinx/
   Main Sphinx devolopment repository
 
 https://bitbucket.org/jonwaltman/sphinx-info/
   Fork of the main Sphinx repository for development on the Texinfo builder
+
+
+Notes
+-----
+
+pydoc-info is hosted and developed on Bitbucket
+https://bitbucket.org/jonwaltman/pydoc-info/.
+
+Any problems, suggestions, criticisms, or comments can be reported on
+Bitbucket or sent to jonathan.waltman@gmail.com.
+
+Copyright (C) 2011, and GNU GPL'd, by Jonathan Waltman.
