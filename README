@@ -21,6 +21,20 @@ Hide superfluous ``*note: references``:
   does not affect other Info documents.
 
 
+Python Info Documents
+---------------------
+
+This package is designed to work with Info files produced from the
+"new" Python documentation.  The "new" documentation is used to
+distinguish the current documents written in RestructedText and built
+using Sphinx to the older versions written in Latex (circa python 2.4).
+
+Support for generating the necessary Info files is currently limited
+to the development branch of Sphinx.  Thus they are not yet available
+at the Python download site nor can they built from source without
+making a few modifications.
+
+
 Setup and Install
 -----------------
 
@@ -39,18 +53,25 @@ Then add the following to your ~/.emacs.d/init.el::
     (require 'pydoc-info)
 
 
-Python Info Documents
----------------------
+Using Info-lookup with other Sphinx-based Documents
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-This package is designed to work with Info files produced from the
-"new" Python documentation.  The "new" documentation is used to
-distinguish the current documents written in RestructedText and built
-using Sphinx to the older versions written in Latex (circa python 2.4).
+The Info-lookup support provided by this package is not limited to the
+standard Python documentation.  It can easily be extended to work with
+other Sphinx-based documents that have been compiled to Info files.
 
-Support for generating the necessary Info files is currently limited
-to the development branch of Sphinx.  Thus they are not yet available
-at the Python download site nor can they built from source without
-some initial set up.
+For example, the documentation for the development version of Sphinx
+can be compiled to the Info file "sphinx.info".  By adding the
+following code to your ``.emacs``, you can enable
+``info-lookup-symbol`` to work for both the standard Python modules
+and Sphinx::
+
+  (info-lookup-add-help
+   :mode 'python-mode
+   :parse-rule 'pydoc-info-python-symbol-at-point
+   :doc-spec
+   '(("(python)Index" pydoc-info-lookup-transform-entry)
+     ("(sphinx)Index" pydoc-info-lookup-transform-entry)))
 
 
 Building the Python Documentation
