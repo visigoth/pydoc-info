@@ -79,10 +79,11 @@ Building the Python Documentation
 
 If you want to build the Python documentation yourself, follow these steps:
 
-#. Download and install the latest version of Sphinx (virtualenv may be useful)::
+#. Download and install the development version of Sphinx (virtualenv
+   may be useful)::
 
-      hg clone https://bitbucket.org/birkenfeld/sphinx
-      cd sphinx
+      hg clone https://bitbucket.org/jonwaltman/sphinx-info
+      cd sphinx-info
       sudo python setup.py install
 
 #. Install some libraries::
@@ -97,13 +98,13 @@ If you want to build the Python documentation yourself, follow these steps:
 #. Modify the configuration file ``conf.py``::
 
       cd Python-2.7.1/Doc
-      cat >> conf.py <<'EOF'
+      cat >> conf.py
 
       texinfo_documents = [
           ('contents', 'python', 'Python Documentation', _stdauthor,
-           "Python", "The Python Documentation", "Software Development"),
+           'Python', 'The Python Documentation', 'Software Development'),
       ]
-      EOF
+
 
 #. Generate the Texinfo::
 

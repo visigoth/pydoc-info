@@ -80,7 +80,8 @@ non-nil."
  :mode 'python-mode
  :parse-rule 'pydoc-info-python-symbol-at-point
  :doc-spec
- '(("(python)Index" pydoc-info-lookup-transform-entry)))
+ '(("(python)Python Module Index" pydoc-info-lookup-transform-entry)
+   ("(python)Index" pydoc-info-lookup-transform-entry)))
 
 (defun pydoc-info-python-symbol-at-point ()
   (with-syntax-table python-dotty-syntax-table
@@ -88,35 +89,36 @@ non-nil."
 
 (defun pydoc-info-lookup-transform-entry (item)
   "Transform a Python index entry to a help item."
-  (cond
-   ;; keyword; foo --> foo
-   ;; statement; foo --> foo
-   ((string-match "\\`\\(keyword\\|statement\\);? \\([[:alnum:]_]+\\)" item)
-    (replace-regexp-in-string " " "." (match-string 2 item)))
+  (let* ((py-re "\\([[:alnum:]_.]+\\)(?)?"))
+    (cond
+     ;; keyword; foo --> foo
+     ;; statement; foo --> foo
+     ((string-match (concat "\\`\\(keyword\\|statement\\);? " py-re) item)
+      (replace-regexp-in-string " " "." (match-string 2 item)))
 
-   ;; foo [built-in ...] --> foo
-   ((string-match "\\`\\([[:alnum:]_ ]+\\) \\[built-in .+\\]" item)
-    (replace-regexp-in-string " " "." (match-string 1 item)))
+     ;; foo (built-in ...) --> foo
+     ((string-match (concat "\\`" py-re " (built-in .+)") item)
+      (replace-regexp-in-string " " "." (match-string 1 item)))
 
-   ;; foo bar [module] --> foo.bar
-   ((string-match "\\`\\([[:alnum:]_ ]+\\) \\[module\\]" item)
-    (replace-regexp-in-string " " "." (match-string 1 item)))
+     ;; foo.bar (module) --> foo.bar
+     ((string-match (concat "\\`" py-re " (module)") item)
+      (replace-regexp-in-string " " "." (match-string 1 item)))
 
-   ;; baz [in module foo bar] --> foo.bar.baz
-   ((string-match "\\`\\([[:alnum:]_ ]+\\) \\[in module \\(.+\\)\\]" item)
-    (replace-regexp-in-string " " "." (concat (match-string 2 item) " "
-                                              (match-string 1 item))))
-   ;; Bar [class in foo bar] --> foo.bar.Bar
-   ((string-match "\\`\\([[:alnum:]_ ]+\\) \\[class in \\(.+\\)\\]" item)
-    (replace-regexp-in-string " " "." (concat (match-string 2 item) " "
-                                              (match-string 1 item))))
-   ;; bar [foo Foo method] --> foo.Foo.bar
-   ((string-match
-     "\\`\\([[:alnum:]_ ]+\\) \\[\\(.+\\) \\(method\\|attribute\\)\\]" item)
-    (replace-regexp-in-string " " "." (concat (match-string 2 item) " "
-                                              (match-string 1 item))))
-   (t
-    item)))
+     ;; baz (in module foo.bar) --> foo.bar.baz
+     ((string-match (concat "\\`" py-re " (in module \\(.+\\))") item)
+      (replace-regexp-in-string " " "." (concat (match-string 2 item) " "
+                                                (match-string 1 item))))
+     ;; Bar (class in foo.bar) --> foo.bar.Bar
+     ((string-match (concat "\\`" py-re " (class in \\(.+\\))") item)
+      (replace-regexp-in-string " " "." (concat (match-string 2 item) " "
+                                                (match-string 1 item))))
+     ;; bar (foo.Foo method) --> foo.Foo.bar
+     ((string-match
+       (concat "\\`" py-re " (\\(.+\\) \\(method\\|attribute\\))") item)
+      (replace-regexp-in-string " " "." (concat (match-string 2 item) " "
+                                                (match-string 1 item))))
+     (t
+      item))))
 
 (provide 'pydoc-info)
 ;;; pydoc-info.el ends here
