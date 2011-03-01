@@ -74,14 +74,30 @@ non-nil."
           (set (make-local-variable 'Info-hide-note-references)
                'hide))))))
 
-;; This replaces the Info-look support in `python.el' which is based
-;; on the old Python docs and no longer works.
-(info-lookup-add-help
- :mode 'python-mode
- :parse-rule 'pydoc-info-python-symbol-at-point
- :doc-spec
- '(("(python)Python Module Index" pydoc-info-lookup-transform-entry)
-   ("(python)Index" pydoc-info-lookup-transform-entry)))
+;;;###autoload
+(defun pydoc-info-add-help (files &rest more-specs)
+  "Add help specifications for a list of Info FILES.
+
+The added specifications are tailored for use with Info files
+generated from Sphinx documents.
+
+MORE-SPECS are additional or overriding values passed to
+`info-lookup-add-help'."
+  (info-lookup-reset)
+  (let (doc-spec)
+    (dolist (f files)
+      (push (list (format "(%s)Python Module Index" f)
+                  'pydoc-info-lookup-transform-entry) doc-spec)
+      (push (list (format "(%s)Index" f)
+                  'pydoc-info-lookup-transform-entry) doc-spec))
+    (apply 'info-lookup-add-help
+           :mode 'python-mode
+           :parse-rule 'pydoc-info-python-symbol-at-point
+           :doc-spec doc-spec
+           more-specs)))
+
+;;;###autoload
+(pydoc-info-add-help '("python"))
 
 (defun pydoc-info-python-symbol-at-point ()
   (with-syntax-table python-dotty-syntax-table
