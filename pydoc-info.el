@@ -91,19 +91,19 @@ non-nil."
   "Transform a Python index entry to a help item."
   (let* ((py-re "\\([[:alnum:]_.]+\\)(?)?"))
     (cond
+     ;; foo.bar --> foo.bar
+     ((string-match (concat "\\`" py-re "\\'") item)
+      item)
      ;; keyword; foo --> foo
      ;; statement; foo --> foo
      ((string-match (concat "\\`\\(keyword\\|statement\\);? " py-re) item)
       (replace-regexp-in-string " " "." (match-string 2 item)))
-
      ;; foo (built-in ...) --> foo
      ((string-match (concat "\\`" py-re " (built-in .+)") item)
       (replace-regexp-in-string " " "." (match-string 1 item)))
-
      ;; foo.bar (module) --> foo.bar
      ((string-match (concat "\\`" py-re " (module)") item)
       (replace-regexp-in-string " " "." (match-string 1 item)))
-
      ;; baz (in module foo.bar) --> foo.bar.baz
      ((string-match (concat "\\`" py-re " (in module \\(.+\\))") item)
       (replace-regexp-in-string " " "." (concat (match-string 2 item) " "
@@ -117,6 +117,18 @@ non-nil."
        (concat "\\`" py-re " (\\(.+\\) \\(method\\|attribute\\))") item)
       (replace-regexp-in-string " " "." (concat (match-string 2 item) " "
                                                 (match-string 1 item))))
+     ;; foo (C ...) --> foo
+     ((string-match (concat "\\`" py-re " (C .*)") item)
+      (match-string 1 item))
+     ;; operator; foo --> foo
+     ((string-match "\\`operator; \\(.*\\)" item)
+      (match-string 1 item))
+     ;; Python Enhancement Proposals; PEP XXX --> PEP XXX
+     ((string-match "\\`Python Enhancement Proposals; \\(PEP .*\\)" item)
+      (match-string 1 item))
+     ;; RFC; RFC XXX --> RFC XXX
+     ((string-match "\\`RFC; \\(RFC .*\\)" item)
+      (match-string 1 item))
      (t
       item))))
 
