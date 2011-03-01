@@ -3,7 +3,9 @@
 ;; Copyright (C) 2011  Jonathan Waltman
 
 ;; Author: Jonathan Waltman <jonathan.waltman@gmail.com>
-;; Keywords:
+;; Created: 1 Feb 2011
+;; Version: 0.2
+;; Keywords: python, info, docs
 
 ;; This program is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
@@ -43,7 +45,7 @@
 
 ;;; Code:
 
-(require 'python)
+;;;###autoload
 (require 'info-look)
 
 (defcustom pydoc-info-hide-note-references t
@@ -100,6 +102,8 @@ MORE-SPECS are additional or overriding values passed to
 (pydoc-info-add-help '("python"))
 
 (defun pydoc-info-python-symbol-at-point ()
+  "Return the current Python symbol."
+  (require 'python)
   (with-syntax-table python-dotty-syntax-table
     (current-word)))
 
